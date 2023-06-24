@@ -1,0 +1,170 @@
+openapi: 3.0.3
+info:
+  description: Open API defintion for the amino acid's composistion service.
+  version: 1.0.0
+  title: Amino Acid's Compositions
+  contact:
+    email: hello@tjarkmeyer.com
+servers:
+  - url: /api/v1
+tags:
+- name: foods
+
+paths:
+  /foods:
+    get:
+      tags:
+        - foods
+      summary: "Get all foods"
+      parameters:
+        - in: query
+          name: s
+          schema:
+            type: string
+          required: false
+          description: search for food name
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Food"
+  /foods/{uuid}:
+    get:
+      tags:
+        - foods
+      summary: "Get a food by ID"
+      parameters:
+        - in: path
+          name: uuid
+          schema:
+            type: string
+          required: true
+          description: ID of the food
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Food"
+  /foods/{uuid}/nutrients:
+    get:
+      tags:
+        - foods
+      summary: "Get nutrients of a food by the food ID"
+      parameters:
+        - in: path
+          name: uuid
+          schema:
+            type: string
+          required: true
+          description: ID of the food
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FoodNutrient"
+
+components:
+  schemas:
+    Food:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        food_category:
+          $ref: "#/components/schemas/FoodCategory"
+        makros:
+          $ref: "#/components/schemas/Makro"
+        nutrients:
+          type: array
+          items:
+            type: string
+            format: uuid
+        created:
+          type: string
+          format: date
+        updated:
+          type: string
+          format: date
+    Makro:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        protein:
+          type: number
+        fat:
+          type: number
+        carbohydrate:
+          type: number
+        created:
+          type: string
+          format: date
+        updated:
+          type: string
+          format: date
+    FoodCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        created:
+          type: string
+          format: date
+        updated:
+          type: string
+          format: date
+    Nutrient:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        unit_name:
+          type: string
+        intake:
+          type: number
+        created:
+          type: string
+          format: date
+        updated:
+          type: string
+          format: date
+    FoodNutrient:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+        nutrient:
+          $ref: "#/components/schemas/Nutrient"
+        created:
+          type: string
+          format: date
+        updated:
+          type: string
+          format: date
